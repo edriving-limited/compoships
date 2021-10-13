@@ -5,9 +5,12 @@ namespace Awobaz\Compoships\Database\Eloquent\Relations;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Awobaz\Compoships\Database\Eloquent\Concerns\UsesDictionary;
 
 trait HasOneOrMany
 {
+    use UsesDictionary;
+
     /**
      * Set the base constraints on the relation query.
      *
@@ -197,10 +200,10 @@ trait HasOneOrMany
         // link them up with their children using the keyed dictionary to make the
         // matching very convenient and easy work. Then we'll just return them.
         foreach ($models as $model) {
-            $key = $this->normalizeDictionaryKey($model->getAttribute($this->localKey));
+            $key = $model->getAttribute($this->localKey);
             //If the foreign key is an array, we know it's a multi-column relationship
             //And we join the values to construct the dictionary key
-            $dictKey = is_array($key) ? implode('-', $key) : $key;
+            $dictKey = $this->normalizeDictionaryKey(is_array($key) ? implode('-', $key) : $key);
 
             if (isset($dictionary[$dictKey])) {
                 $model->setRelation($relation, $this->getRelationValue($dictionary, $dictKey, $type));
