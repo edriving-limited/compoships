@@ -1,0 +1,8 @@
+version: '3'
+services:
+
+  compoships:
+    build: ./
+    container_name: compoships
+    volumes:
+      - ../:/var/www/html

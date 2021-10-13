@@ -224,7 +224,7 @@ trait HasOneOrMany
         // link them up with their children using the keyed dictionary to make the
         // matching very convenient and easy work. Then we'll just return them.
         foreach ($models as $model) {
-            $key = $model->getAttribute($this->localKey);
+            $key = $this->normalizeDictionaryKey($model->getAttribute($this->localKey));
             //If the foreign key is an array, we know it's a multi-column relationship
             //And we join the values to construct the dictionary key
             $dictKey = is_array($key) ? implode('-', $key) : $key;
@@ -257,12 +257,12 @@ trait HasOneOrMany
             //If the foreign key is an array, we know it's a multi-column relationship...
             if (is_array($foreign)) {
                 $dictKeyValues = array_map(function ($k) use ($result) {
-                    return $result->{$k};
+                    return $this->normalizeDictionaryKey($result->{$k});
                 }, $foreign);
                 //... so we join the values to construct the dictionary key
                 $dictionary[implode('-', $dictKeyValues)][] = $result;
             } else {
-                $dictionary[$result->{$foreign}][] = $result;
+                $dictionary[$this->normalizeDictionaryKey($result->{$foreign})][] = $result;
             }
         }
 
