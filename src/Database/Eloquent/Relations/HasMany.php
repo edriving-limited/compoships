@@ -3,11 +3,13 @@
 namespace Awobaz\Compoships\Database\Eloquent\Relations;
 
 use Illuminate\Database\Eloquent\Collection;
+use Awobaz\Compoships\Database\Eloquent\Concerns\UsesDictionary;
 use Illuminate\Database\Eloquent\Relations\HasMany as BaseHasMany;
 
 class HasMany extends BaseHasMany
 {
     use HasOneOrMany;
+    use UsesDictionary;
 
     /**
      * Get the results of the relationship.

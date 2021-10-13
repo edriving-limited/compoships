@@ -5,10 +5,13 @@ namespace Awobaz\Compoships\Database\Eloquent\Relations;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Awobaz\Compoships\Database\Eloquent\Concerns\UsesDictionary;
 use Illuminate\Database\Eloquent\Relations\BelongsTo as BaseBelongsTo;
 
 class BelongsTo extends BaseBelongsTo
 {
+    use UsesDictionary;
+
     /**
      * Get the results of the relationship.
      *
@@ -48,7 +51,7 @@ class BelongsTo extends BaseBelongsTo
         $relationName = property_exists($this, 'relationName') ? $this->relationName : $this->relation;
         if ($model instanceof Model) {
             $this->child->setRelation($relationName, $model);
-        // proper unset // https://github.com/illuminate/database/commit/44411c7288fc7b7d4e5680cfcdaa46d348b5c981
+            // proper unset // https://github.com/illuminate/database/commit/44411c7288fc7b7d4e5680cfcdaa46d348b5c981
         } elseif ($this->child->isDirty($this->foreignKey)) {
             $this->child->unsetRelation($relationName);
         }
@@ -73,8 +76,8 @@ class BelongsTo extends BaseBelongsTo
                 $childAttributes = $this->child->getAttributes();
 
                 $allOwnerKeyValuesAreNull = array_unique(array_values(
-                    array_intersect_key($childAttributes, array_flip($this->ownerKey))
-                )) === [null];
+                        array_intersect_key($childAttributes, array_flip($this->ownerKey))
+                    )) === [null];
 
                 foreach ($this->ownerKey as $index => $key) {
                     $fullKey = $table.'.'.$key;
@@ -228,12 +231,12 @@ class BelongsTo extends BaseBelongsTo
         foreach ($results as $result) {
             if (is_array($owner)) { //Check for multi-columns relationship
                 $dictKeyValues = array_map(function ($k) use ($result) {
-                    return $result->{$k};
+                    return $this->normalizeDictionaryKey($result->{$k});
                 }, $owner);
 
                 $dictionary[implode('-', $dictKeyValues)] = $result;
             } else {
-                $dictionary[$result->getAttribute($owner)] = $result;
+                $dictionary[$this->normalizeDictionaryKey($result->getAttribute($owner))] = $result;
             }
         }
 
@@ -243,12 +246,12 @@ class BelongsTo extends BaseBelongsTo
         foreach ($models as $model) {
             if (is_array($foreign)) { //Check for multi-columns relationship
                 $dictKeyValues = array_map(function ($k) use ($model) {
-                    return $model->{$k};
+                    return $this->normalizeDictionaryKey($model->{$k});
                 }, $foreign);
 
                 $key = implode('-', $dictKeyValues);
             } else {
-                $key = $model->{$foreign};
+                $key = $this->normalizeDictionaryKey($model->{$foreign});
             }
 
             if (isset($dictionary[$key])) {
