@@ -1,6 +1,8 @@
 Compoships
 ==========
 
+**This is a fork of the Compoships package, updated to allow case-insenstitive eager loading of models**
+
 **Compoships** offers the ability to specify relationships based on two (or more) columns in Laravel's Eloquent ORM. The need to match multiple columns in the definition of an Eloquent relationship often arises when working with third party or pre existing schema/database. 
 
 ## The problem
