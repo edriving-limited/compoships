@@ -6,9 +6,12 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\JoinClause;
+use Awobaz\Compoships\Database\Eloquent\Concerns\UsesDictionary;
 
 trait HasOneOrMany
 {
+    use UsesDictionary;
+
     /**
      * Set the base constraints on the relation query.
      *
@@ -227,7 +230,7 @@ trait HasOneOrMany
             $key = $this->normalizeDictionaryKey($model->getAttribute($this->localKey));
             //If the foreign key is an array, we know it's a multi-column relationship
             //And we join the values to construct the dictionary key
-            $dictKey = is_array($key) ? implode('-', $key) : $key;
+            $dictKey = $this->normalizeDictionaryKey(is_array($key) ? implode('-', $key) : $key);
 
             if (isset($dictionary[$dictKey])) {
                 $model->setRelation($relation, $this->getRelationValue($dictionary, $dictKey, $type));
