@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Awobaz\Compoships\Database\Eloquent\Concerns\UsesDictionary;
+use Illuminate\Database\Query\JoinClause;
 
 trait HasOneOrMany
 {
@@ -262,6 +263,25 @@ trait HasOneOrMany
             }
         } else {
             parent::setForeignAttributesForCreate($model);
+        }
+    }
+
+    /**
+     * Add join query constraints for one of many relationships.
+     *
+     * @param \Illuminate\Database\Eloquent\JoinClause $join
+     *
+     * @return void
+     */
+    public function addOneOfManyJoinSubQueryConstraints(JoinClause $join)
+    {
+        if (is_array($this->foreignKey)) {
+            foreach ($this->foreignKey as $key) {
+                $key = $this->normalizeDictionaryKey($key);
+                $join->on($this->qualifySubSelectColumn($key), '=', $this->qualifyRelatedColumn($key));
+            }
+        } else {
+            parent::addOneOfManyJoinSubQueryConstraints($join);
         }
     }
 }
