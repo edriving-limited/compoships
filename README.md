@@ -24,13 +24,20 @@ Then you should be able to require the package `composer require edriving-limite
 You should create a `BaseModel` class which uses the below traits, and then all your models should extend this class.
 
 ```php
-use HasCiRelationships, Compoships {
-    Compoships::hasOne insteadof HasCiRelationships;
-    Compoships::newHasOne insteadof HasCiRelationships;
-    Compoships::hasMany insteadof HasCiRelationships;
-    Compoships::newHasMany insteadof HasCiRelationships;
-    Compoships::belongsTo insteadof HasCiRelationships;
-    Compoships::newBelongsTo insteadof HasCiRelationships;
+use Awobaz\Compoships\Compoships;
+use Illuminate\Database\Eloquent\Model;
+use TishoTM\Eloquent\Concerns\HasCiRelationships;
+
+class BaseModel extends Model
+{
+    use HasCiRelationships, Compoships {
+        Compoships::hasOne insteadof HasCiRelationships;
+        Compoships::newHasOne insteadof HasCiRelationships;
+        Compoships::hasMany insteadof HasCiRelationships;
+        Compoships::newHasMany insteadof HasCiRelationships;
+        Compoships::belongsTo insteadof HasCiRelationships;
+        Compoships::newBelongsTo insteadof HasCiRelationships;
+    }
 }
 ```
 
