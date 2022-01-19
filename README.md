@@ -1,8 +1,8 @@
 # Compoships
 
-**This is a fork of the Compoships package, updated to allow case-insenstitive eager loading of models**
-
-Please refer to that [package](https://github.com/topclaudy/compoships) for documentation.
+By default, Laravel's relationships allow only one primary key and are case-sensitive. This package is a combination
+of the [Compoships](https://github.com/topclaudy/compoships) package, which allows composite keys, as well as the
+[Eloquent case-insensitive relations](https://github.com/TishoTM/eloquent-ci-relations) package, which allows case-insensitive relationships.
 
 ## Installation
 
