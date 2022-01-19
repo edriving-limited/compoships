@@ -303,6 +303,7 @@ trait HasOneOrMany
     {
         if (is_array($this->foreignKey)) {
             foreach ($this->foreignKey as $key) {
+                $key = $this->normalizeDictionaryKey($key);
                 $join->on($this->qualifySubSelectColumn($key), '=', $this->qualifyRelatedColumn($key));
             }
         } else {
